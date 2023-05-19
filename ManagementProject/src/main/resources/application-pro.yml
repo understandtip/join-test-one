@@ -11,7 +11,7 @@ spring:
     driverClassName: com.mysql.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/yizhiTest_db?useUnicode=true&characterEncoding=utf8
     username: root
-    password: jxx2000727
+    password: 123456
     initialSize: 1
     minIdle: 3
     maxActive: 20
@@ -39,9 +39,9 @@ spring:
     ehcache:
       config: classpath:config/ehcache.xml
   redis:
-    host: 192.168.94.128
+    host: 192.168.31.128
     port: 6379
-    password: 162172
+    password: 123456
     # 连接超时时间（毫秒）
     timeout: 10000
     jedis:

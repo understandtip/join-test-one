@@ -1,16 +1,14 @@
 package com.yizhi.student.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yizhi.common.annotation.Log;
 import com.yizhi.common.controller.BaseController;
 import com.yizhi.common.utils.*;
 import com.yizhi.student.domain.ClassDO;
+import com.yizhi.student.domain.MajorDO;
 import com.yizhi.student.service.ClassService;
 import com.yizhi.student.service.CollegeService;
 import com.yizhi.student.service.MajorService;
@@ -33,9 +31,6 @@ import com.yizhi.student.service.StudentInfoService;
 @RequestMapping("/student/studentInfo")
 public class StudentInfoController {
 
-	
-
-
 	@Autowired
 	private StudentInfoService studentInfoService;
     //
@@ -44,8 +39,10 @@ public class StudentInfoController {
 	@PostMapping("/save")
 	@RequiresPermissions("student:studentInfo:add")
 	public R save(StudentInfoDO studentInfoDO){
-	
-		return null;
+		if(studentInfoService.save(studentInfoDO) > 0){
+			return R.ok();
+		}
+		return R.error();
 	}
 
 	/**
@@ -55,9 +52,13 @@ public class StudentInfoController {
 	@GetMapping("/list")
 	@RequiresPermissions("student:studentInfo:studentInfo")
 	public PageUtils list(@RequestParam Map<String, Object> params){
-
-		return null;
-
+		if (params.get("sort")!=null) {
+			params.put("sort",BeanHump.camelToUnderline(params.get("sort").toString()));
+		}
+		Query query = new Query(params);
+		List<StudentInfoDO> studentInfoDOList = studentInfoService.list(query);
+		int total = studentInfoService.count(query);
+		return new PageUtils(studentInfoDOList, total,query.getCurrPage(),query.getPageSize());
 	}
 
 
@@ -69,8 +70,10 @@ public class StudentInfoController {
 	@PostMapping("/update")
 	@RequiresPermissions("student:studentInfo:edit")
 	public R update(StudentInfoDO studentInfo){
-
-		return null;
+		if(studentInfoService.update(studentInfo) > 0){
+			return R.ok();
+		}
+		return R.error();
 	}
 
 	/**
@@ -80,8 +83,11 @@ public class StudentInfoController {
 	@PostMapping( "/remove")
 	@ResponseBody
 	@RequiresPermissions("student:studentInfo:remove")
-	public R remove( Integer id){
-		return null;
+	public R remove(Integer id){
+		if(studentInfoService.remove(id) > 0){
+			return R.ok();
+		}
+		return R.error();
 	}
 	
 	/**
@@ -92,8 +98,10 @@ public class StudentInfoController {
 	@ResponseBody
 	@RequiresPermissions("student:studentInfo:batchRemove")
 	public R remove(@RequestParam("ids[]") Integer[] ids){
-
-		return null;
+		if(studentInfoService.batchRemove(ids) > 0){
+			return R.ok();
+		}
+		return R.error();
 	}
 
 
@@ -112,7 +120,7 @@ public class StudentInfoController {
 	 */
 	@GetMapping("/edit/{id}")
 	@RequiresPermissions("student:studentInfo:edit")
-	String edit(@PathVariable("id") Integer id,Model model){
+	public String edit(@PathVariable("id") Integer id,Model model){
 		StudentInfoDO studentInfo = studentInfoService.get(id);
 		model.addAttribute("studentInfo", studentInfo);
 		return "student/studentInfo/edit";
@@ -123,7 +131,7 @@ public class StudentInfoController {
 	 */
 	@GetMapping("/add")
 	@RequiresPermissions("student:studentInfo:add")
-	String add(){
+	public String add(){
 	    return "student/studentInfo/add";
 	}
 	
