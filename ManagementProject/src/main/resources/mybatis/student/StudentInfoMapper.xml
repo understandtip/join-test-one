@@ -3,31 +3,6 @@
 
 <mapper namespace="com.yizhi.student.dao.StudentInfoDao">
 
-
-    <!--<sql id="StudentInfoColumns">
-        id,
-        student_id,
-        exam_id,
-        class_id,
-        student_name,
-        certify,
-        mail_address,
-        foreign_lanaguage,
-        student_sex,
-        nation,
-        political,
-        card_id,
-        telephone,
-        subject_type,
-        tocollege,
-        tocampus,
-        tomajor,
-        birthplace
-        grade,
-        isstate,
-        birthday,
-        note
-    </sql>-->
     <select id="get" resultType="com.yizhi.student.domain.StudentInfoDO">
         select * from s_student_info where id = #{id}
     </select>
